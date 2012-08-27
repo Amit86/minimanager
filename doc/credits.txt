@@ -1,0 +1,9 @@
+THANKS:
+
+- To the whole Minimanager for project MaNGOS team
+- To Azgar for his patch
+- To all guys who are using this script :-) 
+
+
+Last Updated
+02/23/2010

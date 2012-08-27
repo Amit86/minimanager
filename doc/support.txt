@@ -1,0 +1,11 @@
+miniManager support links:
+
+SVN:
+http://minimanager-tc.googlecode.com/svn/trunk/
+
+Official support forum:
+http://www.trinityscripts.xe.cx/
+
+
+Last Updated
+2/21/2010
