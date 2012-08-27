@@ -112,14 +112,9 @@ $output .= '
                     <td class="table_top_left" valign="top">';
 unset($title);
 
-// check for host php script execution time limit,
-//  warn user if it is not high enough for MiniManager to run
-if (ini_get('max_execution_time') < 1800)
-{
-    if (ini_set('max_execution_time',0));
-    else
-        error('Error - max_execution_time not set.<br /> Please set it manually to 0, in php.ini for full functionality.');
-}
+// Add more memory to PHP if needed by MM
+    if (ini_get('memory_limit') < 16)
+        @ini_set('memory_limit', '16M');
 
 //---------------------Guest login Predefines----------------------------------
 if ($allow_anony && empty($_SESSION['logged_in']))
