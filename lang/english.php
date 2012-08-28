@@ -78,7 +78,9 @@ function lang_login()
   'remember_me' => 'Remember login',
   'pass_recovery' => 'Forgot your Password?',
   'verify_required' => 'Your account requires verification. Please check your email!',
-  'after_registration' => 'Your account was created successfully!'
+  'after_registration' => 'Your account was created successfully!',
+  'invalid_code' => 'Invalid Security Code!',
+  'security_code' => 'Security Code'
   );
   return $lang_login;
 }

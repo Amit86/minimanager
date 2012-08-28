@@ -67,7 +67,7 @@ function dologin(&$sqlr)
 //#################################################################################################
 function login(&$sqlr)
 {
-    global $output, $lang_login, $characters_db, $server, $remember_me_checked;
+    global $output, $lang_login, $characters_db, $server, $remember_me_checked, $enable_captcha;;
 
     $output .= '
                 <center>
@@ -129,7 +129,11 @@ function login(&$sqlr)
     if ($remember_me_checked)
         $output .= ' checked="checked"';
     $output .= ' />                 </td>
-                                </tr>
+    if ($enable_captcha == true)
+        $output .= '<tr><td><img src="libs/captcha/CaptchaSecurityImages.php"><br><br></td></tr>
+                                <tr><td>'.$lang_login['security_code'].':<input type="text" name="security_code" size="45" value="Code Above ^^"><br></td></tr>
+                                <tr align="right"><td width="290"><input type="submit" value="" style="display:none" /></tr>';
+    $output .= '                </tr>
                                 <tr>
                                     <td>
                                     </td>
@@ -252,6 +256,12 @@ elseif (7 == $err)
             <h1>
                 <font class="error">'.$lang_login['verify_required'].'</font>
             </h1>';
+elseif (8 == $err)
+    $output .= '
+            <h1>
+                <font class="error">'.$lang_login['invalid_code'].'</font>
+            </h1>';
+
 else
     $output .= '<h1>'.$lang_login['enter_valid_logon'].'</h1>';
 
@@ -262,10 +272,11 @@ $output .= '
 
 $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
-if ('dologin' === $action)
-    dologin($sqlr);
-else
-    login($sqlr);
+if ('dologin' === $action) {
+    if (($_POST['security_code']) != ($_SESSION['security_code']))
+                redirect('login.php?error=8');
+     else
+                 dologin($sqlr); }
 
 unset($action);
 unset($action_permission);
