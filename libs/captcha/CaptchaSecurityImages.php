@@ -22,6 +22,8 @@ session_start();
 * http://www.gnu.org/licenses/gpl.html
 */
 
+require_once("../../scripts/config.php");
+
 class CaptchaSecurityImages
 {
     var $font = 'monofont.ttf';
@@ -69,9 +71,9 @@ class CaptchaSecurityImages
     }
 }
 
-$width      = isset($_GET['width']) ? $_GET['width'] : '350';
-$height     = isset($_GET['height']) ? $_GET['height'] : '130';
-$characters = isset($_GET['characters']) && 1 < $_GET['characters'] ? $_GET['characters'] : '8';
+$width      = $captcha_width;
+$height     = $captcha_height;
+$characters = $captcha_char_limit;
 
 $captcha = new CaptchaSecurityImages($width, $height, $characters);
 
