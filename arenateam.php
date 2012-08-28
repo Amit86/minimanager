@@ -44,11 +44,17 @@ function browse_teams()
         switch($search_by)
         {
             case "atname":
-                $query = $sqlc->query("SELECT arena_team.arenateamid AS atid, arena_team.name AS atname, arena_team.captainguid AS lguid, arena_team.type AS attype, (SELECT name FROM `characters` WHERE guid = lguid) AS lname,(SELECT COUNT(*) FROM  arena_team_member WHERE arenateamid = atid) AS tot_chars, rating AS atrating, games as atgames, wins as atwins FROM arena_team, arena_team_stats WHERE arena_team.arenateamid = arena_team_stats.arenateamid AND arena_team.name LIKE '%$search_value%' ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
+                $query = $sqlc->query("SELECT art.`arenateamid` as atid, art.`name` as atname, art.`captainguid` as lguid, art.`type` as attype, cCaptain.`name` as lname, COUNT(atm.`arenateamid`) as tot_chars, art.`rating` as atrating, art.`seasonGames` as atgames, art.`seasonWins` as atwins FROM `arena_team` art
+                LEFT JOIN `characters` cCaptain on art.`captainguid` = cCaptain.`guid`
+                RIGHT JOIN `arena_team_member` atm on atm.`arenateamid` = art.`arenateamid`
+                WHERE art.`name` LIKE '%$search_value%' GROUP BY atid ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
                 $query_1 = $sqlc->query("SELECT count(*) FROM arena_team WHERE arena_team.name LIKE '%$search_value%'");
                 break;
             case "leadername":
-                $query = $sqlc->query("SELECT arena_team.arenateamid AS atid, arena_team.name AS atname, arena_team.captainguid AS lguid, arena_team.type AS attype, (SELECT name FROM `characters` WHERE guid = lguid) AS lname,(SELECT COUNT(*) FROM  arena_team_member WHERE arenateamid = atid) AS tot_chars, rating AS atrating, games as atgames, wins as atwins FROM arena_team, arena_team_stats WHERE arena_team.arenateamid = arena_team_stats.arenateamid AND arena_team.captainguid in (SELECT guid from characters where name like '%$search_value%') ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
+                $query = $sqlc->query("SELECT art.`arenateamid` as atid, art.`name` as atname, art.`captainguid` as lguid, art.`type` as attype, cCaptain.`name` as lname, COUNT(atm.`arenateamid`) as tot_chars, art.`rating` as atrating, art.`seasonGames` as atgames, art.`seasonWins` as atwins FROM `arena_team` art
+                LEFT JOIN `characters` cCaptain on art.`captainguid` = cCaptain.`guid`
+                RIGHT JOIN `arena_team_member` atm on atm.`arenateamid` = art.`arenateamid`
+                WHERE cCaptain.`name` LIKE '%$search_value%' GROUP BY atid ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
                 $query_1 = $sqlc->query("SELECT count(*) FROM arena_team WHERE arena_team.captainguid in (SELECT guid from characters where name like '%$search_value%')");
                 break;
             case "atid":
@@ -127,8 +133,8 @@ function browse_teams()
                     <th width=\"1%\"><a href=\"arenateam.php?order_by=tot_chars&amp;start=$start".( $search_value && $search_by ? "&amp;search_by=$search_by&amp;search_value=$search_value" : "" )."&amp;dir=$dir\">".($order_by=='tot_chars' ? "<img src=\"img/arr_".($dir ? "up" : "dw").".gif\" /> " : "")."{$lang_arenateam['members']}</a></th>
                     <th width=\"1%\"><a href=\"arenateam.php?order_by=arenateam_online&amp;start=$start".( $search_value && $search_by ? "&amp;search_by=$search_by&amp;search_value=$search_value" : "" )."&amp;dir=$dir\">".($order_by=='arenateam_online' ? "<img src=\"img/arr_".($dir ? "up" : "dw").".gif\" /> " : "")."{$lang_arenateam['arenateam_online']}</a></th>
                     <th width=\"1%\"><a href=\"arenateam.php?order_by=rating&amp;start=$start".( $search_value && $search_by ? "&amp;search_by=$search_by&amp;search_value=$search_value" : "" )."&amp;dir=$dir\">".($order_by=='rating' ? "<img src=\"img/arr_".($dir ? "up" : "dw").".gif\" /> " : "")."{$lang_arenateam['rating']}</a></th>
-                    <th width=\"1%\"><a href=\"arenateam.php?order_by=games&amp;start=$start".( $search_value && $search_by ? "&amp;search_by=$search_by&amp;search_value=$search_value" : "" )."&amp;dir=$dir\">".($order_by=='games' ? "<img src=\"img/arr_".($dir ? "up" : "dw").".gif\" /> " : "")."{$lang_arenateam['games']}</a></th>
-                    <th width=\"1%\"><a href=\"arenateam.php?order_by=wins&amp;start=$start".( $search_value && $search_by ? "&amp;search_by=$search_by&amp;search_value=$search_value" : "" )."&amp;dir=$dir\">".($order_by=='wins' ? "<img src=\"img/arr_".($dir ? "up" : "dw").".gif\" /> " : "")."{$lang_arenateam['wins']}</a></th>
+                    <th width=\"1%\"><a href=\"arenateam.php?order_by=atgames&amp;start=$start".( $search_value && $search_by ? "&amp;search_by=$search_by&amp;search_value=$search_value" : "" )."&amp;dir=$dir\">".($order_by=='atgames' ? "<img src=\"img/arr_".($dir ? "up" : "dw").".gif\" /> " : "")."{$lang_arenateam['games']}</a></th>
+                    <th width=\"1%\"><a href=\"arenateam.php?order_by=atwins&amp;start=$start".( $search_value && $search_by ? "&amp;search_by=$search_by&amp;search_value=$search_value" : "" )."&amp;dir=$dir\">".($order_by=='atwins' ? "<img src=\"img/arr_".($dir ? "up" : "dw").".gif\" /> " : "")."{$lang_arenateam['wins']}</a></th>
                 </tr>";
                 
     while ($data = $sqlc->fetch_row($query))
@@ -180,7 +186,7 @@ function view_team()
     $arenateam_id = $sqlc->quote_smart($_GET['id']);
     $query = $sqlc->query("SELECT arenateamid, name, type FROM arena_team WHERE arenateamid = '$arenateam_id'");
     $arenateam_data = $sqlc->fetch_row($query);
-    $query = $sqlc->query("SELECT arenateamid, rating, games, wins, played, wins2, rank FROM arena_team_stats WHERE arenateamid = '$arenateam_id'");
+    $query = $sqlc->query("SELECT arenateamid, rating, weekGames, weekWins, seasonGames, seasonWins, rank FROM arena_team WHERE arenateamid = '$arenateam_id'");
     $arenateamstats_data = $sqlc->fetch_row($query);
 
     $rating_offset = 1550;
