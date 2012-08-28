@@ -44,8 +44,8 @@ function char_inv(&$sqlr, &$sqlc)
         if (($user_lvl > $owner_gmlvl)||($owner_name === $user_name))
         {
             // main data that we need for this page, character inventory
-            $result = $sqlc->query('SELECT ci.bag, ci.slot, ci.item, ci.item_template,
-                                    SUBSTRING_INDEX(SUBSTRING_INDEX(data, " ", 15), " ", -1) as stack_count
+            $result = $sqlc->query('SELECT ci.bag, ci.slot, ci.item, ii.itemEntry,
+                                    count as stack_count
                                     FROM character_inventory ci INNER JOIN item_instance ii on ii.guid = ci.item
                                     WHERE ci.guid = '.$id.' ORDER BY ci.bag,ci.slot');
 
@@ -96,23 +96,23 @@ function char_inv(&$sqlr, &$sqlc)
                     if($slot['slot'] < 23) // SLOT 19 TO 22 (Bags)
                     {
                         $bag_id[$slot['item']] = ($slot['slot']-18);
-                        $equiped_bag_id[$slot['slot']-18] = array($slot['item_template'],
-                        $sqlw->result($sqlw->query('SELECT ContainerSlots FROM item_template WHERE entry = '.$slot['item_template'].''), 0, 'ContainerSlots'), $slot['stack_count']);
+                        $equiped_bag_id[$slot['slot']-18] = array($slot['itemEntry'],
+                        $sqlw->result($sqlw->query('SELECT ContainerSlots FROM item_template WHERE entry = '.$slot['itemEntry'].''), 0, 'ContainerSlots'), $slot['stack_count']);
                     }
                     elseif($slot['slot'] < 39) // SLOT 23 TO 38 (BackPack)
                     {
                         if(isset($bag[0][$slot['slot']-23]))
                             $bag[0][$slot['slot']-23][0]++;
                         else 
-                            $bag[0][$slot['slot']-23] = array($slot['item_template'],0,$slot['stack_count']);
+                            $bag[0][$slot['slot']-23] = array($slot['itemEntry'],0,$slot['stack_count']);
                     }
                     elseif($slot['slot'] < 67) // SLOT 39 TO 66 (Bank)
-                        $bank[0][$slot['slot']-39] = array($slot['item_template'],0,$slot['stack_count']);
+                        $bank[0][$slot['slot']-39] = array($slot['itemEntry'],0,$slot['stack_count']);
                     elseif($slot['slot'] < 74) // SLOT 67 TO 73 (Bank Bags)
                     {
                         $bank_bag_id[$slot['item']] = ($slot['slot']-66);
-                        $equip_bnk_bag_id[$slot['slot']-66] = array($slot['item_template'],
-                        $sqlw->result($sqlw->query('SELECT ContainerSlots FROM item_template WHERE entry = '.$slot['item_template'].''), 0, 'ContainerSlots'), $slot['stack_count']);
+                        $equip_bnk_bag_id[$slot['slot']-66] = array($slot['itemEntry'],
+                        $sqlw->result($sqlw->query('SELECT ContainerSlots FROM item_template WHERE entry = '.$slot['itemEntry'].''), 0, 'ContainerSlots'), $slot['stack_count']);
                     }
                 }
                 else
@@ -123,11 +123,11 @@ function char_inv(&$sqlr, &$sqlc)
                         if(isset($bag[$bag_id[$slot['bag']]][$slot['slot']]))
                             $bag[$bag_id[$slot['bag']]][$slot['slot']][1]++;
                         else
-                            $bag[$bag_id[$slot['bag']]][$slot['slot']] = array($slot['item_template'],0,$slot['stack_count']);
+                            $bag[$bag_id[$slot['bag']]][$slot['slot']] = array($slot['itemEntry'],0,$slot['stack_count']);
                     }
                     // Bank Bags
                     elseif (isset($bank_bag_id[$slot['bag']]))
-                        $bank[$bank_bag_id[$slot['bag']]][$slot['slot']] = array($slot['item_template'],0,$slot['stack_count']);
+                        $bank[$bank_bag_id[$slot['bag']]][$slot['slot']] = array($slot['itemEntry'],0,$slot['stack_count']);
                 }
             }
             unset($slot);
