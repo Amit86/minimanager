@@ -13,7 +13,7 @@ valid_login($action_permission['read']);
 function browse_users(&$sqlr, &$sqlc)
 {
     global $output, $lang_global, $lang_user, $mmfpm_db, $action_permission, $user_lvl, $user_name,
-           $itemperpage, $showcountryflag, $expansion_select, $gm_level_arr;
+           $itemperpage, $expansion_select, $gm_level_arr;
 
     $online_pq = "online";
 
@@ -219,14 +219,6 @@ function browse_users(&$sqlr, &$sqlc)
                                 <th width="1%"><a href="user.php?order_by=locked&amp;start='.$start.( $search_value && $search_by ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.($order_by==='locked' ? ' class="'.$order_dir.'"' : '').'>'.$lang_user['locked'].'</a></th>
                                 <th width="1%"><a href="user.php?order_by=last_login&amp;start='.$start.( $search_value && $search_by ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.($order_by==='last_login' ? ' class="'.$order_dir.'"' : '').'>'.$lang_user['last_login'].'</a></th>
                                 <th width="1%"><a href="user.php?order_by=online&amp;start='.$start.( $search_value && $search_by ? '&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.($order_by==='online' ? ' class="'.$order_dir.'"' : '').'>'.$lang_user['online'].'</a></th>';
-    if ($showcountryflag)
-    {
-        require_once 'libs/misc_lib.php';
-        $output .= '
-                                <th width="1%">'.$lang_global['country'].'</th>';
-    }
-    $output .= '
-                            </tr>';
 
     //---------------Page Specific Data Starts Here--------------------------
     while ($data = $sqlr->fetch_assoc($query))
@@ -275,12 +267,6 @@ function browse_users(&$sqlr, &$sqlc)
                                 <td class="small">'.$data['last_login'].'</td>
                                 <td>'.(($data['online']) ? '<img src="img/up.gif" alt="" />' : '-').'</td>';
 
-            if ($showcountryflag)
-            {
-                $country = misc_get_country_by_ip($data['last_ip'], $sqlm);
-                $output .= '
-                                <td>'.(($country['code']) ? '<img src="img/flags/'.$country['code'].'.png" onmousemove="toolTip(\''.($country['country']).'\', \'item_tooltip\')" onmouseout="toolTip()" alt="" />' : '-').'</td>';
-            }
             $output .= '
                             </tr>';
         }
@@ -293,9 +279,6 @@ function browse_users(&$sqlr, &$sqlc)
             if ($expansion_select)
                 $output .= '
                                 <td>*</td>';
-            if ($showcountryflag)
-                $output .= '
-                                <td>*</td>';
             $output .= '
                             </tr>';
         }
@@ -303,9 +286,9 @@ function browse_users(&$sqlr, &$sqlc)
     $output .= '
                             <tr>
                                 <td  colspan="';
-    if ($expansion_select || $showcountryflag)
+    if ($expansion_select)
     {
-        if ($expansion_select && $showcountryflag)
+        if ($expansion_select)
             $output .= '13';
         else
         $output .= '12';
@@ -329,9 +312,9 @@ function browse_users(&$sqlr, &$sqlc)
     $output .= '
                                 </td>
                                 <td colspan="';
-    if ($expansion_select || $showcountryflag)
+    if ($expansion_select)
     {
-        if ($expansion_select && $showcountryflag)
+        if ($expansion_select)
             $output .= '5';
         else
             $output .= '4';
@@ -770,10 +753,14 @@ function doadd_new()
 function edit_user()
 {
     global $lang_global, $lang_user, $output, $realm_db, $characters_db, $realm_id, $mmfpm_db, $user_lvl, $user_name,
-           $gm_level_arr, $action_permission, $expansion_select, $developer_test_mode, $multi_realm_mode, $server;
+           $gm_level_arr, $action_permission, $expansion_select, $developer_test_mode, $multi_realm_mode, $server, $showcountryflag;
 
     $online_pq = "online";
 
+    if ($showcountryflag)
+    {
+        require_once 'libs/misc_lib.php';
+    }
 
     if (empty($_GET['id'])) 
         redirect("user.php?error=10");
@@ -904,12 +891,30 @@ function edit_user()
                                     </tr>
                                     <tr>
                                         <td>'.$lang_user['last_ip'].'</td>';
-        if($user_lvl >= $action_permission['update'])
-            $output .= '
-                                        <td>'.$data['last_ip'].'<a href="banned.php?action=do_add_entry&amp;entry='.$data['last_ip'].'&amp;bantime=3600&amp;ban_type=ip_banned"> &lt;- '.$lang_user['ban_this_ip'].'</a></td>';
+         if($user_lvl >= $action_permission['update'])
+         {
+             $output .= '
+                                         <td>'.$data['last_ip'].'';
+                                             if ($showcountryflag)
+                                             {
+                                                 $country = misc_get_country_by_ip($data['last_ip'], $sqlm);
+                                                 $output .= '
+                                                            '.(($country['code']) ? '<img src="img/flags/'.$country['code'].'.png" onmousemove="toolTip(\''.($country['country']).'\', \'item_tooltip\')" onmouseout="toolTip()" alt="" />' : '-').'';
+                                             }
+              $output .= '             <a href="banned.php?action=do_add_entry&amp;entry='.$data['last_ip'].'&amp;bantime=3600&amp;ban_type=ip_banned"> &lt;- '.$lang_user['ban_this_ip'].'</a></td>';
+        }
         else
+        {
             $output .= "
-                                        <td>***.***.***.***</td>";
+                                        <td>***.***.***.***";
+                                            if ($showcountryflag)
+                                            {
+                                                $country = misc_get_country_by_ip($data['last_ip'], $sqlm);
+                                                $output .= '
+                                                           '.(($country['code']) ? '<img src="img/flags/'.$country['code'].'.png" onmousemove="toolTip(\''.($country['country']).'\', \'item_tooltip\')" onmouseout="toolTip()" alt="" />' : '-').'';
+                                            }
+            $output .= "          </td>";
+        }
         $output .= "
                                     </tr>
                                     <tr>
