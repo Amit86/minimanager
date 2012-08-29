@@ -276,9 +276,9 @@ function browse_chars(&$sqlr, &$sqlc)
             $owner_gmlvl = 0;
             
         $owner_acc_name = $sqlr->result($result, 0, 'username');
-        $lastseen = date('Y-m-d G:i:s', $char[11]);
+        $lastseen = date('Y-m-d G:i:s', $char[10]);
 
-        $guild_name = $sqlc->fetch_row($sqlc->query('SELECT name FROM guild WHERE guildid = '.$char[12].''));
+        $guild_name = $sqlc->fetch_row($sqlc->query('SELECT name FROM guild WHERE guildid = '.$char[11].''));
 
         if (($user_lvl >= $owner_gmlvl)||($owner_acc_name == $user_name))
         {
@@ -293,15 +293,14 @@ function browse_chars(&$sqlr, &$sqlc)
                                 <td>$char[0]</td>
                                 <td><a href=\"char.php?id=$char[0]\">".htmlentities($char[1])."</a></td>
                                 <td><a href=\"user.php?action=edit_user&amp;error=11&amp;id=$char[2]\">".htmlentities($owner_acc_name)."</a></td>
-                                <td><img src='img/c_icons/{$char[3]}-{$char[10]}.gif' onmousemove='toolTip(\"".char_get_race_name($char[3])."\",\"item_tooltip\")' onmouseout='toolTip()' alt=\"\" /></td>
+                                <td><img src='img/c_icons/{$char[3]}-{$char[9]}.gif' onmousemove='toolTip(\"".char_get_race_name($char[3])."\",\"item_tooltip\")' onmouseout='toolTip()' alt=\"\" /></td>
                                 <td><img src='img/c_icons/{$char[4]}.gif' onmousemove='toolTip(\"".char_get_class_name($char[4])."\",\"item_tooltip\")' onmouseout='toolTip()' alt=\"\" /></td>
-                                <td>".char_get_level_color($char[9])."</td>
+                                <td>".char_get_level_color($char[8])."</td>
                                 <td class=\"small\"><span onmousemove='toolTip(\"MapID:".$char[6]."\",\"item_tooltip\")' onmouseout='toolTip()'>".get_map_name($char[6], $sqlm)."</span></td>
                                 <td class=\"small\"><span onmousemove='toolTip(\"ZoneID:".$char[5]."\",\"item_tooltip\")' onmouseout='toolTip()'>".get_zone_name($char[5], $sqlm)."</span></td>
-                                <td>$char[7]</td>
-                                <td class=\"small\"><a href=\"guild.php?action=view_guild&amp;error=3&amp;id=$char[12]\">".htmlentities($guild_name[0])."</a></td>
+                                <td class=\"small\"><a href=\"guild.php?action=view_guild&amp;error=3&amp;id=$char[11]\">".htmlentities($guild_name[0])."</a></td>
                                 <td class=\"small\">$lastseen</td>
-                                <td>".(($char[8]) ? "<img src=\"img/up.gif\" alt=\"\" />" : "-")."</td>";
+                                <td>".(($char[7]) ? "<img src=\"img/up.gif\" alt=\"\" />" : "-")."</td>";
             if ($showcountryflag)
             {
                 $country = misc_get_country_by_account($char[2], $sqlr, $sqlm);
