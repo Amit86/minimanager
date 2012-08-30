@@ -11,7 +11,7 @@ $sql->connect($characters_db[$realm_id]['addr'], $characters_db[$realm_id]['user
 
 $start = (isset($_GET['start'])) ? $sql->quote_smart($_GET['start']) : 0;
 $order_by = (isset($_GET['order_by'])) ? $sql->quote_smart($_GET['order_by']) :"honor";
-$query = $sql->query("SELECT C.guid, C.name, C.race, C.class, C.todayHonorPoints AS honor , C.totalKills AS kills, C.level, C.arenaPoints AS arena, COALESCE(guild_member.guildid,0) as GNAME, C.gender FROM characters C LEFT JOIN guild_member ON C.guid = guild_member.guid WHERE race in (1,3,4,7,11) ORDER BY $order_by DESC LIMIT 25;");
+$query = $sql->query("SELECT C.guid, C.name, C.race, C.class, C.totalHonorPoints AS honor , C.totalKills AS kills, C.level, C.arenaPoints AS arena, COALESCE(guild_member.guildid,0) as GNAME, C.gender FROM characters C LEFT JOIN guild_member ON C.guid = guild_member.guid WHERE race in (1,3,4,7,11) ORDER BY $order_by DESC LIMIT 25;");
 $this_page = $sql->num_rows($query);
 $output .= "
                 <script type=\"text/javascript\">
