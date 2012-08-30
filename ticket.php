@@ -39,9 +39,9 @@ function browse_tickets(&$sqlc)
     $all_record = $sqlc->result($query_1,0);
     unset($query_1);
 
-    $query = $sqlc->query("SELECT gm_tickets.guid, gm_tickets.playerGuid, SUBSTRING_INDEX(gm_tickets.message,' ',6), characters.name, characters.online
+    $query = $sqlc->query("SELECT gm_tickets.guid, gm_tickets.guid, SUBSTRING_INDEX(gm_tickets.message,' ',6), characters.name, characters.online
                             FROM gm_tickets,characters
-                                WHERE gm_tickets.playerGuid = characters.guid
+                                WHERE gm_tickets.guid = characters.guid
                                   ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
 
     $output .="
@@ -167,10 +167,10 @@ function edit_ticket()
     else 
         redirect("ticket.php?error=1");
 
-    $query = $sqlc->query("SELECT gm_tickets.playerGuid, gm_tickets.message text, `characters`.name
+    $query = $sqlc->query("SELECT gm_tickets.guid, gm_tickets.message text, `characters`.name
                             FROM gm_tickets,`characters`
-                            LEFT JOIN gm_tickets k1 ON k1.`playerGuid`=`characters`.`guid`
-                            WHERE gm_tickets.playerGuid = `characters`.`guid` AND gm_tickets.guid = '$id'");
+                            LEFT JOIN gm_tickets k1 ON k1.`guid`=`characters`.`guid`
+                            WHERE gm_tickets.guid = `characters`.`guid` AND gm_tickets.guid = '$id'");
 
     if ($ticket = $sqlc->fetch_row($query))
     {
