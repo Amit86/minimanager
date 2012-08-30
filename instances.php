@@ -40,8 +40,7 @@ function instances()
     $all_record = $sqlw->result($sqlw->query('SELECT count(*) FROM instance_template'), 0);
 
     // main data that we need for this page, instances
-    $result = $sqlw->query('SELECT map, level_min, level_max
-                            FROM instance_template JOIN access_requirement ON access_requirement.id = instance_template.access_id
+    $result = $sqlw->query('SELECT mapid, level_min, level_max FROM access_requirement
                             ORDER BY '.$order_by.' '.$order_dir.' LIMIT '.$start.', '.$itemperpage.';');
 
     /*---------------Page Specific Data Starts Here--------------------------
@@ -87,7 +86,7 @@ function instances()
                 $reset .= $hours.' hours';*/
         $output .= '
                         <tr valign="top">
-                            <td>'.get_map_name($instances['map'], $sqlm).' ('.$instances['map'].')</td>
+                            <td>'.get_map_name($instances['mapid'], $sqlm).' ('.$instances['mapid'].')</td>
                             <td>'.$instances['level_min'].'</td>
                             <td>'.$instances['level_max'].'</td>
                         </tr>';
