@@ -96,11 +96,11 @@ function guild_bank(&$sqlr, &$sqlc)
                     </div>
                     <div id="tab_content">';
                     
-        $result = $sqlc->query('SELECT gbi.SlotId, gbi.item_entry, SUBSTRING_INDEX(SUBSTRING_INDEX(data, " ", 15), " ", -1) as stack_count FROM guild_bank_item gbi INNER JOIN item_instance ii on ii.guid = gbi.item_guid WHERE gbi.guildid = '.$guild_id.' AND TabID = '.$current_tab.'');
+        $result = $sqlc->query('SELECT gbi.SlotId, itemEntry, count as stack_count FROM guild_bank_item gbi INNER JOIN item_instance ii on ii.guid = gbi.item_guid WHERE gbi.guildid = '.$guild_id.' AND TabID = '.$current_tab.'');
         $gb_slots = array();
         
         while ($tab = $sqlc->fetch_assoc($result))
-            if ($tab['item_entry'])
+            if ($tab['itemEntry'])
                 $gb_slots[$tab['SlotId']] = $tab;
                 
         $output .= '
@@ -120,7 +120,7 @@ function guild_bank(&$sqlr, &$sqlc)
                 $item_position = $j*7+$i;
                 if (isset($gb_slots[$item_position]))
                 {
-                    $gb_item_id = $gb_slots[$item_position]['item_entry'];
+                    $gb_item_id = $gb_slots[$item_position]['itemEntry'];
                     $stack = $gb_slots[$item_position]['stack_count'] == 1 ? '' : $gb_slots[$item_position]['stack_count'];
                     $output .= '
                                         <div style="left:'.($j*43).'px;top:'.($i*41).'px;">
