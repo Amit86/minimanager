@@ -154,7 +154,7 @@ function edit_char() { //form needs update, uneditable fields have been removed 
 
             //inventory+bank items
             $sql->connect($characters_db[$realm_id]['addr'], $characters_db[$realm_id]['user'], $characters_db[$realm_id]['pass'], $characters_db[$realm_id]['name']);
-            $query2 = $sql->query("SELECT bag,slot,item,item_template FROM character_inventory WHERE guid = '$id' ORDER BY bag,slot");
+            $query2 = $sql->query("SELECT bag,slot,item,itemEntry FROM character_inventory ci JOIN item_instance ii ON ci.item = ii.guid WHERE ci.guid = '$id' ORDER BY bag,slot");
 
             $inv = array();
             $count = 0;
