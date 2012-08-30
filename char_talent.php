@@ -207,7 +207,7 @@ function char_talent(&$sqlr, &$sqlc)
                 if ($sqlc->num_rows($result))
                 {
                     $glyphs = $sqlc->fetch_assoc($result);
-                    $glyphs = array($glyphs['glyph1'], $glyphs['glyph2'], $glyphs['glyph3'], $glyphs['glyph4'], $glyphs['glyph5'], $glyphs['glyph6'], $glyphs['glyph7']); // didnt want to recode the block down there
+                    $glyphs = array($glyphs['glyph1'], $glyphs['glyph2'], $glyphs['glyph3'], $glyphs['glyph4'], $glyphs['glyph5'], $glyphs['glyph6']); // didnt want to recode the block down there
                 }
                 else
                     $glyphs = array(0,0,0,0,0,0,0);
