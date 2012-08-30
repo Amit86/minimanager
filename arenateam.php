@@ -195,7 +195,7 @@ function view_team()
     else if ($arenateam_data[2] == 5)
         $rating_offset += 12;
 
-    $members = $sqlc->query("SELECT arena_team_member.guid,characters.name, arena_team_member.personal_rating, level, arena_team_member.played_week, arena_team_member.wons_week, arena_team_member.played_season, arena_team_member.wons_season, characters.race, characters.class, characters.online, characters.account, characters.logout_time, gender, account FROM arena_team_member,characters LEFT JOIN arena_team_member k1 ON k1.guid=characters.guid AND k1.arenateamid='$arenateam_id' WHERE arena_team_member.arenateamid = '$arenateam_id' AND arena_team_member.guid=characters.guid ORDER BY characters.name");
+    $members = $sqlc->query("SELECT arena_team_member.guid,characters.name, arena_team_member.personal_rating, level, arena_team_member.weekGames, arena_team_member.weekWins, arena_team_member.seasonGames, arena_team_member.seasonWins, characters.race, characters.class, characters.online, characters.account, characters.logout_time, gender, account FROM arena_team_member,characters LEFT JOIN arena_team_member k1 ON k1.guid=characters.guid AND k1.arenateamid='$arenateam_id' WHERE arena_team_member.arenateamid = '$arenateam_id' AND arena_team_member.guid=characters.guid ORDER BY characters.name");
     $total_members = $sqlc->num_rows($members);
     $losses_week = $arenateamstats_data[2]-$arenateamstats_data[3];
     if($arenateamstats_data[2])
