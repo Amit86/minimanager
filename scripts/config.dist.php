@@ -327,7 +327,6 @@ $menu_array = array
       array(     'banned.php','banned_list', 3,5,5,5),
       array(    'cleanup.php',    'cleanup', 5,5,5,5),
       array(        'irc.php',        'irc', 0,5,5,5),
-      array(  'bugreport.php',  'bugreport', 5,5,5,5),
     ),
   ),
   array

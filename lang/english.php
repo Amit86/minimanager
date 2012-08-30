@@ -269,7 +269,6 @@ function lang_header()
 
     'forums' => 'Forums',
     'irc' => 'IRC Applet',
-    'bugreport' => 'Bug Report',
 
     // please check the length at 'My Account' Menu
     'realms' => '------Realms------',
