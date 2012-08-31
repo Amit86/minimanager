@@ -131,7 +131,7 @@ function browse_chars(&$sqlr, &$sqlc)
                 else 
                     $search_value = 0;
                     
-                $result = $sqlc->query("SELECT guid FROM character_inventory WHERE item_template = '$search_value'");
+                $result = $sqlc->query("SELECT owner_guid FROM item_instance WHERE itemEntry = '$search_value'");
 
                 $where_out = "characters.guid IN (0 ";
                 while ($char = $sqlc->fetch_row($result))
