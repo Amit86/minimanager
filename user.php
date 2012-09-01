@@ -901,7 +901,7 @@ function edit_user()
                                                  $output .= '
                                                             '.(($country['code']) ? '<img src="img/flags/'.$country['code'].'.png" onmousemove="toolTip(\''.($country['country']).'\', \'item_tooltip\')" onmouseout="toolTip()" alt="" />' : '-').'';
                                              }
-              $output .= '             <a href="banned.php?action=do_add_entry&amp;entry='.$data['last_ip'].'&amp;bantime=3600&amp;ban_type=ip_banned"> &lt;- '.$lang_user['ban_this_ip'].'</a></td>';
+              $output .= '             <a href="banned.php?action=do_add_entry&amp;entry='.$data['last_ip'].'&amp;bantime=3600&amp;ban_type=ip_banned"> &lt;- '.$lang_user['ban_this_ip'].'</a> | <a href="user.php?error=3&search_value='.$data['last_ip'].'&search_by=last_ip">'.$lang_user['search_this_ip'].'</a></td>';
         }
         else
         {
