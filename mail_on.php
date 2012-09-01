@@ -40,7 +40,7 @@ function do_search(&$sqlc)
     $dir = ($dir) ? 0 : 1;
     //==========================$_GET and SECURE end=============================
 
-    $query = $sql->query("SELECT a.id, a.messageType, a.sender, a.receiver, a.subject, a.body, a.has_items, a.money, a.cod, a.checked, b.item_template, c.itemEntry
+    $query = $sql->query("SELECT a.id, a.messageType, a.sender, a.receiver, a.subject, a.body, a.has_items, a.money, a.cod, a.checked, b.item_guid, c.itemEntry
                           FROM mail a INNER JOIN mail_items b ON a.id = b.mail_id LEFT JOIN item_instance c ON b.item_guid = c.guid ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
     $total_found = $sql->num_rows($query);
     $this_page = $sql->num_rows($query);
@@ -163,12 +163,12 @@ function search() {
     $order_dir = ($dir) ? "ASC" : "DESC";
     $dir = ($dir) ? 0 : 1;
 
-    $temp = $sql->query("SELECT guid FROM `characters` WHERE name like '%$search_value%'");
+    $temp = $sql->query("SELECT guid FROM `characters` WHERE name = '$search_value'");
     $search_value = $sql->result($temp, 0, 'guid');
 
     $query_1 = $sql->query("SELECT count(*) FROM `mail`");
 
-    $query = $sql->query("SELECT a.id, a.messageType, a.sender, a.receiver, a.subject, a.body, a.has_items, a.money, a.cod, a.checked, b.item_template, c.itemEntry
+    $query = $sql->query("SELECT a.id, a.messageType, a.sender, a.receiver, a.subject, a.body, a.has_items, a.money, a.cod, a.checked, b.item_guid, c.itemEntry
                             FROM mail a
                             INNER JOIN mail_items b ON a.id = b.mail_id
                             LEFT JOIN item_instance c ON b.item_guid = c.guid
