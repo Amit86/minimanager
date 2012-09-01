@@ -10,11 +10,11 @@ valid_login($action_permission['read']);
 //########################################################################################################################
 //  INGAME MAIL
 //########################################################################################################################
-function do_search()
+function do_search(&$sqlc)
 {
     global $lang_global, $lang_mail, 
             $output, $itemperpage, $item_datasite, 
-            $mangos_db, $characters_db, $realm_id;
+            $world_db, $characters_db, $realm_id;
     wowhead_tt();
 
     $sql = new SQL;
@@ -294,13 +294,13 @@ $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
 switch ($action) {
     case "do_search":
-        do_search();
+        do_search($sqlc);
         break;
     case "search":
         search();
         break;
     default:
-        do_search();
+        do_search($sqlc);
 }
 
 //unset($action);
