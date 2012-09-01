@@ -172,7 +172,7 @@ function search() {
                             FROM mail a
                             INNER JOIN mail_items b ON a.id = b.mail_id
                             LEFT JOIN item_instance c ON b.item_guid = c.guid
-                            WHERE $search_by = $search_value
+                            WHERE a.$search_by = $search_value
                             ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
 
     $this_page = $sql->num_rows($query);
