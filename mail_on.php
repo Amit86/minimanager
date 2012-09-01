@@ -40,8 +40,8 @@ function do_search()
     $dir = ($dir) ? 0 : 1;
     //==========================$_GET and SECURE end=============================
 
-    $query = $sql->query("SELECT a.id, a.messageType, a.sender, a.receiver, a.subject, a.body, a.has_items, a.money, a.cod, a.checked, b.item_template
-                          FROM mail a INNER JOIN mail_items b ON a.id = b.mail_id ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
+    $query = $sql->query("SELECT a.id, a.messageType, a.sender, a.receiver, a.subject, a.body, a.has_items, a.money, a.cod, a.checked, b.item_template, c.itemEntry
+                          FROM mail a INNER JOIN mail_items b ON a.id = b.mail_id LEFT JOIN item_instance c ON b.item_guid = c.guid ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
     $total_found = $sql->num_rows($query);
     $this_page = $sql->num_rows($query);
     $query_1 = $sql->query("SELECT count(*) FROM `mail`");
@@ -114,10 +114,10 @@ function do_search()
                 
         $output .= "
                 <td>
-                    <a style=\"padding:2px;\" href=\"$item_datasite{$mail[10]}\" target=\"_blank\">
-                        <img class=\"bag_icon\" src=\"".get_item_icon($mail[10])."\" alt=\"\" />
+                    <a style=\"padding:2px;\" href=\"$item_datasite{$mail[11]}\" target=\"_blank\">
+                        <img class=\"bag_icon\" src=\"".get_item_icon($mail[11])."\" alt=\"\" />
                     </a>";
-        //$output .= maketooltip("<img src=\"./img/up.gif\" alt= />", $item_datasite{$mail[10]}, $mail[10], "item_tooltip", "target=_blank");
+        //$output .= maketooltip("<img src=\"./img/up.gif\" alt= />", $item_datasite{$mail[11]}, $mail[11], "item_tooltip", "target=_blank");
         $output .= "
                 </td>
                 <td>".$mail[5]."</td>
@@ -168,9 +168,10 @@ function search() {
 
     $query_1 = $sql->query("SELECT count(*) FROM `mail`");
 
-    $query = $sql->query("SELECT a.id, a.messageType, a.sender, a.receiver, a.subject, a.body, a.has_items, a.money, a.cod, a.checked, b.item_template
+    $query = $sql->query("SELECT a.id, a.messageType, a.sender, a.receiver, a.subject, a.body, a.has_items, a.money, a.cod, a.checked, b.item_template, c.itemEntry
                             FROM mail a
                             INNER JOIN mail_items b ON a.id = b.mail_id
+                            LEFT JOIN item_instance c ON b.item_guid = c.guid
                             WHERE $search_by = $search_value
                             ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
 
@@ -249,11 +250,11 @@ function search() {
                     <td>$mail[4]</td>
                     <td>";
         $output .= "
-                        <a style=\"padding:2px;\" href=\"$item_datasite{$mail[10]}\" target=\"_blank\">
-                            <img class=\"bag_icon\" src=\"".get_item_icon($mail[10])."\" alt=\"\" />
+                        <a style=\"padding:2px;\" href=\"$item_datasite{$mail[11]}\" target=\"_blank\">
+                            <img class=\"bag_icon\" src=\"".get_item_icon($mail[11])."\" alt=\"\" />
                         </a>";
                         
-        //maketooltip("<img src=\"./img/up.gif\" alt=\"\">", $item_datasite{$mail[10]}, $mail[10], "item_tooltip", "target=\"_blank\"");
+        //maketooltip("<img src=\"./img/up.gif\" alt=\"\">", $item_datasite{$mail[11]}, $mail[11], "item_tooltip", "target=\"_blank\"");
         $output .= "</td>
                     <td>".$mail[5]."</td>
                     <td>$money</td>
