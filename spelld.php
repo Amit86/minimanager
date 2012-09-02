@@ -50,9 +50,9 @@ function browse_spells()
         else 
             $search_by = 'entry';
 
-        $query_1 = $sqlw->query('SELECT count(*) FROM disables WHERE sourceType=0 AND $search_by LIKE \'%$search_value%\'');
+        $query_1 = $sqlw->query('SELECT count(*) FROM disables WHERE sourceType=0 AND '.$search_by.' LIKE \'%'.$search_value.'%\'');
         $result = $sqlw->query('SELECT entry, flags, comment FROM disables
-                                WHERE sourceType=0 AND '.$search_by.' LIKE \'%$search_value%\' ORDER BY '.$order_by.' '.$order_dir.' LIMIT '.$start.', '.$itemperpage.'');
+                                WHERE sourceType=0 AND '.$search_by.' LIKE \'%'.$search_value.'%\' ORDER BY '.$order_by.' '.$order_dir.' LIMIT '.$start.', '.$itemperpage.'');
     }
     else
     {
