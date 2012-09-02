@@ -50,14 +50,14 @@ function browse_spells()
         else 
             $search_by = 'entry';
 
-        $query_1 = $sqlw->query('SELECT count(*) FROM spell_disabled WHERE $search_by LIKE \'%$search_value%\'');
-        $result = $sqlw->query('SELECT entry, disable_mask, comment FROM spell_disabled
-                                WHERE '.$search_by.' LIKE \'%$search_value%\' ORDER BY '.$order_by.' '.$order_dir.' LIMIT '.$start.', '.$itemperpage.'');
+        $query_1 = $sqlw->query('SELECT count(*) FROM disables WHERE sourceType=0 AND $search_by LIKE \'%$search_value%\'');
+        $result = $sqlw->query('SELECT entry, flags, comment FROM disables
+                                WHERE sourceType=0 AND '.$search_by.' LIKE \'%$search_value%\' ORDER BY '.$order_by.' '.$order_dir.' LIMIT '.$start.', '.$itemperpage.'');
     }
     else
     {
-        $query_1 = $sqlw->query('SELECT count(*) FROM spell_disabled');
-        $result = $sqlw->query('SELECT entry, disable_mask, comment FROM spell_disabled
+        $query_1 = $sqlw->query('SELECT count(*) FROM disables WHERE sourceType=0');
+        $result = $sqlw->query('SELECT entry, flags, comment FROM disables WHERE sourceType=0
                                 ORDER BY '.$order_by.' '.$order_dir.' LIMIT '.$start.', '.$itemperpage.'');
     }
     //get total number of items
@@ -124,7 +124,7 @@ function browse_spells()
                             <th width="1%"></th>';
     $output .= '
                             <th width="10%"><a href="spelld.php?order_by=entry&amp;start='.$start.( $search_value && $search_by ? '&amp;error=3&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.($order_by==='entry' ? ' class="'.$order_dir.'"' : '').'>'.$lang_spelld['entry'].'</a></th>
-                            <th width="10%"><a href="spelld.php?order_by=disable_mask&amp;start='.$start.( $search_value && $search_by ? '&amp;error=3&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.($order_by==='disable_mask' ? ' class="'.$order_dir.'"' : '').'>'.$lang_spelld['disable_mask'].'</a></th>
+                            <th width="10%"><a href="spelld.php?order_by=flags&amp;start='.$start.( $search_value && $search_by ? '&amp;error=3&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.($order_by==='flags' ? ' class="'.$order_dir.'"' : '').'>'.$lang_spelld['disable_mask'].'</a></th>
                             <th width="70%"><a href="spelld.php?order_by=comment&amp;start='.$start.( $search_value && $search_by ? '&amp;error=3&amp;search_by='.$search_by.'&amp;search_value='.$search_value.'' : '' ).'&amp;dir='.$dir.'"'.($order_by==='comment' ? ' class="'.$order_dir.'"' : '').'>'.$lang_spelld['comment'].'</a></th>
                         </tr>
                         <tr>';
@@ -139,7 +139,7 @@ function browse_spells()
                             <td></td>';
         $output .= '
                             <td>'.$spelld['entry'].'</td>
-                            <td>'.$spelld['disable_mask'].'</td>
+                            <td>'.$spelld['flags'].'</td>
                             <td>'.$spelld['comment'].'</td>
                         </tr>
                         <tr>';
@@ -283,7 +283,7 @@ function doadd_new()
     global $world_db, $realm_id, $action_permission;
     valid_login($action_permission['insert']);
 
-    if ( empty($_GET['entry']) && empty($_GET['disable_mask']) && empty($_GET['comment']) )
+    if ( empty($_GET['entry']) && empty($_GET['flags']) && empty($_GET['comment']) )
         redirect('spelld.php?error=1');
 
     $sqlw = new SQL;
@@ -294,15 +294,15 @@ function doadd_new()
     else
         redirect('spelld.php?error=6');
         
-    $disable_mask = $sqlw->quote_smart($_GET['disable_mask']);
+    $flags = $sqlw->quote_smart($_GET['flags']);
     
-    if (is_numeric($disable_mask));
+    if (is_numeric($flags));
     else
         redirect('spelld.php?error=6');
         
     $comment = $sqlw->quote_smart($_GET['comment']);
 
-    $sqlw->query('INSERT INTO spell_disabled (entry, disable_mask, comment) VALUES (\''.$entry.'\', \''.$disable_mask.'\', \''.$comment.'\')');
+    $sqlw->query('INSERT INTO spell_disabled (sourceType, entry, flags, comment) VALUES (0, \''.$entry.'\', \''.$flags.'\', \''.$comment.'\')');
     
     if ($sqlw->affected_rows())
         redirect('spelld.php?error=8');
