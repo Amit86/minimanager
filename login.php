@@ -272,12 +272,17 @@ $output .= '
 
 $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
-if ('dologin' === $action) {
+if ('dologin' === $action)
+{
     if (($_POST['security_code']) != ($_SESSION['security_code']))
                 redirect('login.php?error=8');
-     else
-                 dologin($sqlr); }
-
+    else
+                 dologin($sqlr);
+                 
+}
+else
+    login($sqlr);
+    
 unset($action);
 unset($action_permission);
 unset($lang_login);
