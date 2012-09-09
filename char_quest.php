@@ -71,7 +71,7 @@ function char_quest(&$sqlr, &$sqlc)
                                     <th width="78%"><a href="char_quest.php?id='.$id.'&amp;realm='.$realmid.'&amp;start='.$start.'&amp;order_by=2&amp;dir='.$dir.'"'.($order_by == 2 ? ' class="'.$order_dir.'"' : '').'>'.$lang_char['quest_title'].'</a></th>
                                     <th width="5%"><img src="img/aff_qst.png" width="14" height="14" border="0" alt="" /></th>
                                 </tr>';
-            $result = $sqlc->query('SELECT quest, status, rewarded FROM character_queststatus WHERE guid = '.$id.' AND ( status = 3 OR status = 1 ) ORDER BY status DESC');
+            $result = $sqlc->query('SELECT quest, status FROM character_queststatus WHERE guid = '.$id.' AND ( status = 3 OR status = 1 ) ORDER BY status DESC');
 
             $quests_1 = array();
             $quests_3 = array();
@@ -81,7 +81,7 @@ function char_quest(&$sqlr, &$sqlc)
                 while ($quest = $sqlc->fetch_assoc($result))
                 {
                     $deplang = get_lang_id();
-                    $query1 = $sqlc->query('SELECT QuestLevel, IFNULL('.($deplang<>0 ? '`title_loc'.$deplang.'`' : 'NULL').', title) as Title FROM `'.$world_db[$realmid]['name'].'`.`quest_template` LEFT JOIN `'.$world_db[$realmid]['name'].'`.`locales_quest` ON `quest_template`.`entry` = `locales_quest`.`entry` WHERE `quest_template`.`entry` = \''.$quest['quest'].'\'');
+                    $query1 = $sqlc->query('SELECT Level, IFNULL('.($deplang<>0 ? '`title_loc'.$deplang.'`' : 'NULL').', title) as Title FROM `'.$world_db[$realmid]['name'].'`.`quest_template` LEFT JOIN `'.$world_db[$realmid]['name'].'`.`locales_quest` ON `quest_template`.`id` = `locales_quest`.`entry` WHERE `quest_template`.`id` = \''.$quest['quest'].'\'');
                     $quest_info = $sqlc->fetch_assoc($query1);
                     
                     if(1 == $quest['status'])
