@@ -128,7 +128,7 @@ function login(&$sqlr)
                                     <td>'.$lang_login['remember_me'].' : <input type="checkbox" name="remember" value="1"';
     if ($remember_me_checked)
         $output .= ' checked="checked"';
-    $output .= ' />                 </td>
+    $output .= ' />                 </td>';
     if ($enable_captcha == true)
         $output .= '<tr><td><img src="libs/captcha/CaptchaSecurityImages.php"><br><br></td></tr>
                                 <tr><td>'.$lang_login['security_code'].':<input type="text" name="security_code" size="45" value="Code Above ^^"><br></td></tr>
