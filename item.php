@@ -2366,9 +2366,9 @@ function edit() {
             }
         }
 
-        $result2 = $sql->query("SELECT quest_template.entry,IFNULL(".($deplang<>0?"title_loc$deplang":"NULL").",`title`) as title,QuestLevel FROM quest_template LEFT JOIN locales_quest ON quest_template.entry = locales_quest.entry WHERE ( SrcItemId = {$item['entry']} OR ReqItemId1 = {$item['entry']} OR
-                            ReqItemId2 = {$item['entry']} OR ReqItemId3 = {$item['entry']} OR ReqItemId4 = {$item['entry']} OR RewItemId1 = {$item['entry']} OR
-                            RewItemId2 = {$item['entry']} OR RewItemId3 = {$item['entry']} OR RewItemId4 = {$item['entry']} ) ORDER BY QuestLevel DESC");
+        $result2 = $sql->query("SELECT quest_template.Id,IFNULL(".($deplang<>0?"title_loc$deplang":"NULL").",`title`) as title,Level FROM quest_template LEFT JOIN locales_quest ON quest_template.Id = locales_quest.entry WHERE ( SourceItemId = {$item['entry']} OR RequiredItemId1 = {$item['entry']} OR
+                            RequiredItemId2 = {$item['entry']} OR RequiredItemId3 = {$item['entry']} OR RequiredItemId4 = {$item['entry']} OR RewardItemId1 = {$item['entry']} OR
+                            RewardItemId2 = {$item['entry']} OR RewardItemId3 = {$item['entry']} OR RewardItemId4 = {$item['entry']} ) ORDER BY Level DESC");
                           
         if ($sql->num_rows($result2))
         {
@@ -2384,9 +2384,9 @@ function edit() {
             }
         }
 
-        $result2 = $sql->query("SELECT quest_template.entry,IFNULL(".($deplang<>0?"title_loc$deplang":"NULL").",`title`) as title,QuestLevel FROM quest_template LEFT JOIN locales_quest ON quest_template.entry = locales_quest.entry WHERE ( RewChoiceItemId1 = {$item['entry']} OR RewChoiceItemId2 = {$item['entry']} OR
-                                RewChoiceItemId3 = {$item['entry']} OR RewChoiceItemId4 = {$item['entry']} OR RewChoiceItemId5 = {$item['entry']} OR RewChoiceItemId6 = {$item['entry']} )
-                                ORDER BY QuestLevel DESC");
+        $result2 = $sql->query("SELECT quest_template.Id,IFNULL(".($deplang<>0?"title_loc$deplang":"NULL").",`title`) as title,Level FROM quest_template LEFT JOIN locales_quest ON quest_template.Id = locales_quest.entry WHERE ( RewardChoiceItemId1 = {$item['entry']} OR RewardChoiceItemId2 = {$item['entry']} OR
+                                RewardChoiceItemId3 = {$item['entry']} OR RewardChoiceItemId4 = {$item['entry']} OR RewardChoiceItemId5 = {$item['entry']} OR RewardChoiceItemId6 = {$item['entry']} )
+                                ORDER BY Level DESC");
         if ($sql->num_rows($result2))
         {
             $output .= "
