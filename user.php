@@ -753,7 +753,7 @@ function doadd_new()
 function edit_user()
 {
     global $lang_global, $lang_user, $output, $realm_db, $characters_db, $realm_id, $mmfpm_db, $user_lvl, $user_name,
-           $gm_level_arr, $action_permission, $expansion_select, $developer_test_mode, $multi_realm_mode, $server, $showcountryflag;
+           $gm_level_arr, $action_permission, $expansion_select, $developer_test_mode, $multi_realm_mode, $server, $showcountryflag, $enable_soap;
 
     $online_pq = "online";
 
@@ -1040,11 +1040,19 @@ function edit_user()
                     {
                         $output .= "
                                         <tr>
-                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'---></td>
+                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;---></td>
                                             <td>
                                                 <a href=\"char.php?id=$char[0]&amp;realm=$realm[0]\">$char[1]  - <img src='img/c_icons/{$char[2]}-{$char[5]}.gif' onmousemove='toolTip(\"".char_get_race_name($char[2])."\",\"item_tooltip\")' onmouseout='toolTip()' alt=\"\" />
-                                                <img src='img/c_icons/{$char[3]}.gif' onmousemove='toolTip(\"".char_get_class_name($char[3])."\",\"item_tooltip\")' onmouseout='toolTip()' alt=\"\"/> - lvl ".char_get_level_color($char[4])."</a>
-                                            </td>
+                                                <img src='img/c_icons/{$char[3]}.gif' onmousemove='toolTip(\"".char_get_class_name($char[3])."\",\"item_tooltip\")' onmouseout='toolTip()' alt=\"\"/> - lvl ".char_get_level_color($char[4])."</a>";
+                    if ($enable_soap == 1)
+                    {
+                        $output .= "            <br /> <br />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;---><a href=\"user.php?action=soap_command&cmd=rename&char=$char[1]&id=$id\">Rename</a><br />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;---><a href=\"user.php?action=soap_command&cmd=changefaction&char=$char[1]&id=$id\">Change Faction</a><br />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;---><a href=\"user.php?action=soap_command&cmd=changerace&char=$char[1]&id=$id\">Change Race</a><br />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;---><a href=\"user.php?action=soap_command&cmd=customize&char=$char[1]&id=$id\">Character Customize</a><br />";
+                    }
+                        $output .= "        </td>
                                         </tr>";
                     }
                 }
@@ -1066,11 +1074,19 @@ function edit_user()
                 {
                     $output .= "
                                         <tr>
-                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'---></td>
+                                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;---></td>
                                             <td>
                                                 <a href=\"char.php?id=$char[0]\">$char[1]  - <img src='img/c_icons/{$char[2]}-{$char[5]}.gif' onmousemove='toolTip(\"".char_get_race_name($char[2])."\",\"item_tooltip\")' onmouseout='toolTip()' alt=\"\" />
-                                                <img src='img/c_icons/{$char[3]}.gif' onmousemove='toolTip(\"".char_get_class_name($char[3])."\",\"item_tooltip\")' onmouseout='toolTip()' alt=\"\"/> - lvl ".char_get_level_color($char[4])."</a>
-                                            </td>
+                                                <img src='img/c_icons/{$char[3]}.gif' onmousemove='toolTip(\"".char_get_class_name($char[3])."\",\"item_tooltip\")' onmouseout='toolTip()' alt=\"\"/> - lvl ".char_get_level_color($char[4])."</a>";
+                    if ($enable_soap == 1)
+                    {
+                        $output .= "            <br /> <br />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;---><a href=\"user.php?action=soap_command&cmd=rename&char=$char[1]&id=$id\">Rename</a><br />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;---><a href=\"user.php?action=soap_command&cmd=changefaction&char=$char[1]&id=$id\">Change Faction</a><br />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;---><a href=\"user.php?action=soap_command&cmd=changerace&char=$char[1]&id=$id\">Change Race</a><br />
+                                                &nbsp;&nbsp;&nbsp;&nbsp;---><a href=\"user.php?action=soap_command&cmd=customize&char=$char[1]&id=$id\">Character Customize</a><br />";
+                    }
+                        $output .= "        </td>
                                         </tr>";
                 }
             }
@@ -1218,6 +1234,53 @@ function doupdate_referral($referredby, $user_id)
     }
 }
 
+//########################################################################################################################
+// SOAP FUNCTION
+//########################################################################################################################
+
+function soap_command()
+{
+global $soapaddr, $soap_port, $soap_user, $soap_pass, $cmd, $char, $docmd;
+
+require_once 'scripts/config.php';
+
+   $cmd = $_GET['cmd'];
+   $char = $_GET['char'];
+   $id = $_GET['id'];
+
+$command = "error";
+
+   $client = new SoapClient(NULL, array(
+       'location' => "http://$soapaddr:$soap_port/",
+       'uri'      => 'urn:TC',
+       'login'    => $soap_user,
+       'password' => $soap_pass,
+   ));
+
+   switch ($cmd)
+   {
+      case "rename":
+           $command = "character rename $char";
+      break;
+      case "changefaction":
+           $command = "character changefaction $char";
+      break;
+      case "changerace":
+           $command = "character changerace $char";
+      break;
+      case "cuztomize":
+           $command = "character cuztomize $char";
+      break;
+      default:
+           $command = "error";
+   }
+
+   if($command != "error")
+      $docmd = $client->executeCommand(new SoapParam($command, "command"));
+
+   return($docmd);
+}
+
 
 //########################################################################################################################
 // MAIN
@@ -1331,6 +1394,13 @@ switch ($action)
     case "backup_user":
         backup_user();
         break;
+    case "soap_command":
+        soap_command();
+        $output .= "
+            <h1><font class=\"error\">$docmd</font></h1>";
+        edit_user();
+        break;
+
     default:
         browse_users($sqlr, $sqlc);
 }

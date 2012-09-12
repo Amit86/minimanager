@@ -73,7 +73,7 @@ $characters_db[1]['encoding'] = 'utf8';           // SQL connection encoding
 $world_db[2]['addr']          = '127.0.0.1:3306'; // SQL server IP:port this DB located on
 $world_db[2]['user']          = 'root';           // SQL server login this DB located on
 $world_db[2]['pass']          = '1';              // SQL server pass this DB located on
-$world_db[2]['name']          = 'world';         // World Database name, by default "world"
+$world_db[2]['name']          = 'world';          // World Database name, by default "world"
 $world_db[2]['encoding']      = 'utf8';           // SQL connection encoding
                // position in array must represent realmd ID
 $characters_db[2]['addr']     = '127.0.0.1:3306'; // SQL server IP:port this DB located on
@@ -98,6 +98,14 @@ $server[1]['telnet_user']   = 'USER';      // Telnet username, must be all CAPS
 $server[1]['telnet_pass']   = 'pass';      // Telnet password
 $server[1]['both_factions'] =  true;       // Allow to see opponent faction characters. Affects only players.
 $server[1]['talent_rate']   =  1;          // Talent rate set for this server, needed for talent point calculation
+
+//---- SOAP Protocol Settings ---
+$enable_soap                =  0;          // Enable if you use SOAP protocol on your realm. This will work only if you have 'php-soap' installed
+$soapaddr                   = '0.0.0.0';   // Game Server IP, as seen by MiniManager, from your webhost
+$soap_port                  =  7878;       // SOAP Port
+$soap_user                  = 'SOAP_USER'; // SOAP Username
+$soap_pass                  = 'SOAP_PASS'; // SOAP Password
+
 
 /* Sample Second Realm config
         // position in array must represent realmd ID, same as in $world_db
