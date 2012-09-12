@@ -128,7 +128,7 @@ function login(&$sqlr)
                                     <td>'.$lang_login['remember_me'].' : <input type="checkbox" name="remember" value="1"';
     if ($remember_me_checked)
         $output .= ' checked="checked"';
-    $output .= ' />                 </td>
+    $output .= ' />                 </td>';
     if ($enable_captcha == true)
         $output .= '<tr><td><img src="libs/captcha/CaptchaSecurityImages.php"><br><br></td></tr>
                                 <tr><td>'.$lang_login['security_code'].':<input type="text" name="security_code" size="45" value="Code Above ^^"><br></td></tr>
@@ -272,12 +272,17 @@ $output .= '
 
 $action = (isset($_GET['action'])) ? $_GET['action'] : NULL;
 
-if ('dologin' === $action) {
+if ('dologin' === $action)
+{
     if (($_POST['security_code']) != ($_SESSION['security_code']))
                 redirect('login.php?error=8');
-     else
-                 dologin($sqlr); }
-
+    else
+                 dologin($sqlr);
+                 
+}
+else
+    login($sqlr);
+    
 unset($action);
 unset($action_permission);
 unset($lang_login);
