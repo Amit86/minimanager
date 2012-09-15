@@ -78,8 +78,8 @@ function char_mail(&$sqlr, &$sqlc)
             //---------------Page Specific Starts Ends here----------------------------
             $query = $sqlc->query('SELECT a.id as id, a.messageType as messagetype, a.sender as sender,
                                     a.subject as subject, a.body as body, a.has_items as hasitems, a.money as money, a.cod as cod, a.checked as checked,
-                                    b.item_template as itemtemplate
-                                    FROM mail a INNER JOIN mail_items b ON a.id = b.mail_id where a.receiver = '.$id .' LIMIT '.$start.', '.$itemperpage.'');
+                                    b.item_guid as itemtemplate, c.itemEntry
+                                    FROM mail a INNER JOIN mail_items b ON a.id = b.mail_id LEFT JOIN item_instance c ON b.item_guid = c.guid where a.receiver = '.$id .' LIMIT '.$start.', '.$itemperpage.'');
             $total_mail = $sqlc->result($sqlc->query('SELECT count(*) FROM mail WHERE receiver= '.$id .''), 0);
 
 
@@ -113,8 +113,8 @@ function char_mail(&$sqlr, &$sqlc)
                                     <td><a href="char.php?id='.$mail['sender'].'">'.get_char_name($mail['sender']).'</a></td>
                                     <td>'.$mail['subject'].'</td>
                                     <td>
-                                        <a style="padding:2px;" href="'.$item_datasite.$mail['itemtemplate'].'" target="_blank">
-                                            <img class="bag_icon" src="'.get_item_icon($mail['itemtemplate'], $sqlm).'" alt="" />
+                                        <a style="padding:2px;" href="'.$item_datasite.$mail['itemEntry'].'" target="_blank">
+                                            <img class="bag_icon" src="'.get_item_icon($mail['itemEntry'], $sqlm).'" alt="" />
                                         </a>
                                     </td>
                                     <td>'.$mail['body'].'</td>
