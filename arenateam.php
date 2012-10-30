@@ -70,7 +70,7 @@ function browse_teams()
     }
     else
     {
-        $query = $sqlc->query("SELECT arena_team.arenateamid AS atid, arena_team.name AS atname, arena_team.captainguid AS lguid, arena_team.type AS attype, (SELECT NAME FROM `characters` WHERE guid = lguid) AS lname,(SELECT COUNT(*) FROM  arena_team_member WHERE arenateamid = atid) AS tot_chars, rating AS atrating, seasonGames AS atgames, seasonWins AS atwins, (SELECT COUNT(*) AS GCNT  FROM `arena_team_member`, `characters`, `arena_team` WHERE arena_team.arenateamid = atid AND arena_team_member.arenateamid = arena_team.arenateamid AND arena_team_member.guid = characters.guid AND characters.online = 1) AS arenateam_online FROM arena_team ORDER BY $order_by $order_dir LIMIT $START, $itemperpage");
+        $query = $sqlc->query("SELECT arena_team.arenateamid AS atid, arena_team.name AS atname, arena_team.captainguid AS lguid, arena_team.type AS attype, (SELECT NAME FROM `characters` WHERE guid = lguid) AS lname,(SELECT COUNT(*) FROM  arena_team_member WHERE arenateamid = atid) AS tot_chars, rating AS atrating, seasonGames AS atgames, seasonWins AS atwins, (SELECT COUNT(*) AS GCNT  FROM `arena_team_member`, `characters`, `arena_team` WHERE arena_team.arenateamid = atid AND arena_team_member.arenateamid = arena_team.arenateamid AND arena_team_member.guid = characters.guid AND characters.online = 1) AS arenateam_online FROM arena_team ORDER BY $order_by $order_dir LIMIT $start, $itemperpage");
         $query_1 = $sqlc->query("SELECT count(*) FROM arena_team");
     }
     
